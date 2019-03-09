@@ -1,0 +1,56 @@
+Sub VBA_Stocks()
+    
+'Loop through all sheets
+Dim WS As Worksheet
+    For Each WS In Worksheets
+    WS.Activate
+
+
+'Determine the last row
+    Dim LastRow As Long
+    LastRow = ActiveSheet.Cells(Rows.Count, "A").End(xlUp).Row
+
+'Add headings for ticker and Total Stock Volume
+    Range("I1").Value = "Ticker"
+    Range("J1").Value = "Volume"
+
+'Define Variables
+    Dim Ticker_Name As String
+    Dim Volume As Double
+    Volume = 0
+    Dim Summary_Row As Integer
+    Summary_Row = 2
+    
+
+'Loop through all tickers
+        For i = 2 To LastRow
+
+'Check to see if we are still within the same ticker, if not...
+            If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+
+'set the ticker name
+            Ticker_Name = Cells(i, 1).Value
+
+'Add to the total volume
+            Volume = Volume + Cells(i, 7).Value
+
+'Print the ticker in the summary table
+            Range("I" & Summary_Row).Value = Ticker_Name
+
+'Print volume amount in summary table
+            Range("J" & Summary_Row).Value = Volume
+
+'Add 1 to the summary table row
+            Summary_Row = Summary_Row + 1
+
+'Reset the volume total
+            Volume = 0
+
+'If the cell immediately following a row IS the same ticker, add to the total volume
+            Else: Volume = Volume + Cells(i, 7).Value
+    
+        End If
+    Next i
+Next WS
+
+End Sub
